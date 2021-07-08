@@ -1,11 +1,36 @@
-import React from 'react'
+import React from "react";
+import {Link} from 'react-router-dom';
 
 const Navbar = () => {
-    return (
-        <div>
-            navbar
+  return (
+    <nav className="navbar navbar-expand-lg navbar-light bg-secondary">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">
+          My Favorite Videos
+        </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon" />
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="position-absolute bottom-20 end-0 nav-item">
+              <Link className="nav-link active" aria-current="page" to="/new-video">
+                Create a new video
+              </Link>
+            </li>
+          </ul>
         </div>
-    )
-}
+      </div>
+    </nav>
+  );
+};
 
-export default Navbar
+export default Navbar;
