@@ -21,14 +21,20 @@ export const getVideos: RequestHandler = async (req, res) => {
     }
 }
 
-export const getVideo: RequestHandler = (req, res) => {
-    res.json('getting video')
+export const getVideo: RequestHandler = async (req, res) => {
+    const videoFound = await Video.findById(req.params.id)
+    if(!videoFound) return res.status(204).json();
+    return res.json(videoFound)
 }
 
-export const deleteVideo: RequestHandler = (req, res) => {
-    res.json('deleting a video')
+export const deleteVideo: RequestHandler = async (req, res) => {
+    const videoFound = await Video.findByIdAndDelete(req.params.id)
+    if(!videoFound) return res.status(204).json();
+    return res.json(videoFound)
 }
 
-export const updateVideo: RequestHandler = (req, res) => {
+export const updateVideo: RequestHandler = async (req, res) => {
+    const videoUpdated = await Video.findByIdAndUpdate(req.params.id, req.body)
+    if(!videoUpdated) return res.status(204).json();
     res.json('updating a video')
 }
