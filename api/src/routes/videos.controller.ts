@@ -1,11 +1,24 @@
-import {RequestHandler} from 'express'
+import {RequestHandler} from 'express';
+import Video from './Video'
 
-export const createVideo: RequestHandler = (req, res) => {
-    res.json('creatting a video')
+export const createVideo: RequestHandler = async (req, res) => {
+    const videoFound = await Video.findOne({url: req.body.url})
+    if(videoFound) {
+        return res.status(301).json({message: 'The url already exists'})
+    }
+
+    const video = new Video(req.body)
+    const savedVideo = await video.save();
+    res.json(savedVideo);
 }
 
-export const getVideos: RequestHandler = (req, res) => {
-    res.json('getting videos')
+export const getVideos: RequestHandler = async (req, res) => {
+    try {
+        const videos = await Video.find()
+        return res.json(videos);
+    } catch (error) {
+        res.json(error)
+    }
 }
 
 export const getVideo: RequestHandler = (req, res) => {
