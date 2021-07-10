@@ -15,7 +15,7 @@ const VideoItem = ({ video, loadVideos }: Props) => {
   const history = useHistory();
 
   const handleDelete = async (id: string) => {
-    await videoService.deleteVideo(id)
+    await videoService.deleteVideo(id);
     loadVideos();
   }
 
