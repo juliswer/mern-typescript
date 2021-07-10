@@ -1,13 +1,18 @@
-import React, {ChangeEvent, FormEvent, useState} from "react";
+import React, {ChangeEvent, FormEvent, useState, useEffect} from "react";
 import { Video } from "./Video";
 import * as videoService from './VideoService';
 import {toast} from 'react-toastify';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 
 type InputChange = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 
+interface Params {
+  id: string
+}
+
 const VideoForm = () => {
     const history = useHistory();
+    const params = useParams<Params>();
 
     const initialState = {
         title: '', 
@@ -22,12 +27,31 @@ const VideoForm = () => {
     }
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const res = await videoService.createVideo(video)
-        toast.success("New video added")
-        setVideo(initialState)
+        e.preventDefault();
+
+        if (!params.id) {
+          await videoService.createVideo(video)
+          toast.success("New video added")
+          setVideo(initialState)
+        } else {
+          await videoService.updateVideo(params.id, video)
+        }
+
         history.push('/')
     }
+
+    const getVideo = async (id: string) => {
+      const res = await videoService.getVideo(id);
+      const {title, description, url} = res.data;
+      setVideo({title, description, url})
+    }
+
+    useEffect(() => {
+      if(params.id) getVideo(params.id); 
+      return () => {
+        
+      }
+    }, [])
 
     return (
       <div className="row">
@@ -66,7 +90,12 @@ const VideoForm = () => {
                     placeholder="Write a description"
                     onChange={handleInputChange}
                   ></textarea>
-                  <button className="btn btn-primary mt-2">Create Video</button>
+                  {
+                    params.id ?
+                    <button className="btn btn-primary mt-2">Update video</button>
+                    :
+                    <button className="btn btn-primary mt-2">Create Video</button>
+                  }
                 </div>
               </form>
             </div>
